@@ -1,0 +1,19 @@
+numpy
+
+pandas
+
+python_igraph
+
+rpy2
+
+scipy
+
+scikit-learn
+
+click
+
+jinja2
+
+tqdm
+
+-e git+https://github.com/ozlemmuslu/GAT2VEC#egg=GAT2VEC
