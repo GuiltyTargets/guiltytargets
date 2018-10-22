@@ -13,6 +13,8 @@ import os
 from GAT2VEC.evaluation.classification import Classification
 from GAT2VEC.gat2vec import Gat2Vec
 from ppi_network_annotation.model.network import Network
+from ppi_network_annotation.model.attribute_network import AttributeNetwork
+from ppi_network_annotation.model.labeled_network import LabeledNetwork
 from guiltytargets.constants import *
 
 __all__ = [
@@ -35,8 +37,12 @@ def write_gat2vec_input_files(
     :param Network network: Network object with attributes overlayed on it.
     """
     network.write_adj_list(adjacency_list_path)
-    network.write_attribute_adj_list(attribute_adjacency_list_path)
-    network.write_index_labels(targets, mapped_labels_path)
+
+    attribute_network = AttributeNetwork(network)
+    attribute_network.write_attribute_adj_list(attribute_adjacency_list_path)
+
+    labeled_network = LabeledNetwork(network)
+    labeled_network.write_index_labels(targets, mapped_labels_path)
 
 
 def rank_targets(
@@ -97,4 +103,3 @@ def rank_targets(
     )
 
     return results_model
-

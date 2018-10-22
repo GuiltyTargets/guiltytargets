@@ -1,4 +1,4 @@
-"""This module enables gene_prioritization to be run as ``python -m gene_prioritization``."""
+"""This module enables guiltytargets to be run as ``python -m guiltytargets``."""
 
 from guiltytargets.cli import main
 
