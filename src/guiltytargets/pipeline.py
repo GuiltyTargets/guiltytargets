@@ -41,8 +41,7 @@ def write_gat2vec_input_files(network: Network, targets: list, home_dir: str):
     labeled_network.write_index_labels(targets, gat2vec_paths.get_labels_path(home_dir))
 
 
-def rank_targets(network: Network, targets: list, home_dir: str, ranked_targets_path: str,
-                 auc_path: str) -> pd.DataFrame:
+def rank_targets(network: Network, targets: list, home_dir: str) -> pd.DataFrame:
     """
     Rank proteins based on their likelihood of being targets
 
@@ -67,20 +66,30 @@ def rank_targets(network: Network, targets: list, home_dir: str, ranked_targets_
 
     results_model = clf_model.evaluate(model, label=False, evaluation_scheme="cv")
 
-    if ranked_targets_path and network:
-        probs_df = pd.DataFrame(clf_model.get_prediction_probs_for_entire_set(model))
-        entrez_ids = network.get_attribute_from_indices(
-            probs_df.index.values,
-            attribute_name="name"
-        )
-        probs_df["Entrez"] = entrez_ids
-        probs_df.to_csv(ranked_targets_path, sep="\t")
+    save_rankings(clf_model, home_dir, model, network)
 
     results_model.to_csv(
-        auc_path,
+        os.path.join(home_dir, AUC_FILE_NAME),
         encoding="utf-8",
         sep="\t",
         index=False,
     )
 
     return results_model
+
+
+def save_rankings(clf_model, home_dir, emb, network):
+    """Save the predicted rankings to a file.
+
+    :param clf_model: Classification model.
+    :param home_dir: Home directory
+    :param emb: Embedding model
+    :param network: PPI network with annotations
+    """
+    probs_df = pd.DataFrame(clf_model.get_prediction_probs_for_entire_set(emb))
+    entrez_ids = network.get_attribute_from_indices(
+        probs_df.index.values,
+        attribute_name="name"
+    )
+    probs_df["Entrez"] = entrez_ids
+    probs_df.to_csv(os.path.join(home_dir, RANKED_TARGETS_FILE), sep="\t")
