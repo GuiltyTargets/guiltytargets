@@ -80,10 +80,7 @@ def main(config_path: str):
     targets = parse_gene_list(targets_path, network.graph)
 
     rank_targets(
-        input_directory=gat2vec_input_directory,
-        adjacency_list_path=adjacency_list_path,
-        attribute_adjacency_list_path=attribute_adjacency_list_path,
-        mapped_labels_path=mapped_labels_path,
+        home_dir=gat2vec_input_directory,
         targets=targets,
         ranked_targets_path=gat2vec_predictions_path,
         network=network,
