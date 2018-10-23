@@ -1,7 +1,7 @@
 """Tool for prioritizing proteins based on their likelihood of being targets in the context of a
 specific disease."""
 
-__version__ = '0.0.1-dev'
+__version__ = '0.0.1.1-dev'
 
 __title__ = 'guiltytargets'
 __description__ = 'A tool for ranking potential targets for a given disease'
