@@ -34,8 +34,7 @@ INSTALL_REQUIRES = [
     'scikit-learn',
     'python-igraph',
     'click',
-    'jinja2',
-    'easy_config',
+    'easy-config',
 ]
 
 EXTRAS_REQUIRE = {
