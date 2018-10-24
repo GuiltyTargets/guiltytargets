@@ -1,4 +1,6 @@
-"""This module enables guiltytargets to be run as ``python -m guiltytargets``."""
+# -*- coding: utf-8 -*-
+
+"""This module enables GuiltyTargets to be run as ``python -m guiltytargets``."""
 
 from guiltytargets.cli import main
 

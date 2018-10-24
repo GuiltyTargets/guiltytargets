@@ -16,4 +16,6 @@ jinja2
 
 tqdm
 
+easy_config
+
 -e git+https://github.com/ozlemmuslu/GAT2VEC#egg=GAT2VEC

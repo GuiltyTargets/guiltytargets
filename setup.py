@@ -35,6 +35,7 @@ INSTALL_REQUIRES = [
     'python-igraph',
     'click',
     'jinja2',
+    'easy_config',
 ]
 
 EXTRAS_REQUIRE = {

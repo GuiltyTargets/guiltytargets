@@ -1,36 +1,82 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-"""Pipeline for emig-reimplementation.
+"""Pipeline for GuiltyTargets."""
 
-This can be run as a module with ``python -m gene_prioritization.cli``
-or through the installed command ``gene_prioritization.
-"""
+from typing import List, Tuple
 
-import logging
 import pandas as pd
-import os
-
+from GAT2VEC import paths as gat2vec_paths
 from GAT2VEC.evaluation.classification import Classification
 from GAT2VEC.gat2vec import Gat2Vec
-from GAT2VEC import paths as gat2vec_paths
-from ppi_network_annotation.model.network import Network
-from ppi_network_annotation.model.attribute_network import AttributeNetwork
-from ppi_network_annotation.model.labeled_network import LabeledNetwork
-from guiltytargets.constants import *
+
+from guiltytargets.constants import gat2vec_config
+from ppi_network_annotation.model import AttributeNetwork, LabeledNetwork, Network
+from ppi_network_annotation.parsers import parse_gene_list
+from ppi_network_annotation.pipeline import generate_ppi_network
 
 __all__ = [
-    'rank_targets'
+    'run',
+    'rank_targets',
 ]
 
-logger = logging.getLogger(__name__)
 
-HERE = os.path.abspath(os.path.dirname(__file__))
+def run(input_directory,
+        targets_path,
+        ppi_graph_path,
+        dge_path,
+        auc_output_path,
+        probs_output_path,
+        max_adj_p,
+        max_log2_fold_change,
+        min_log2_fold_change,
+        entrez_id_header,
+        log2_fold_change_header,
+        adj_p_header,
+        base_mean_header,
+        entrez_delimiter,
+        ppi_edge_min_confidence) -> None:
+    """Does it."""
+    network = generate_ppi_network(
+        ppi_graph_path=ppi_graph_path,
+        dge_path=dge_path,
+        max_adj_p=max_adj_p,
+        max_log2_fold_change=max_log2_fold_change,
+        min_log2_fold_change=min_log2_fold_change,
+        entrez_id_header=entrez_id_header,
+        log2_fold_change_header=log2_fold_change_header,
+        adj_p_header=adj_p_header,
+        base_mean_header=base_mean_header,
+        entrez_delimiter=entrez_delimiter,
+        ppi_edge_min_confidence=ppi_edge_min_confidence,
+    )
+
+    targets = parse_gene_list(targets_path, network.graph)
+
+    auc_df, probs_df = rank_targets(
+        directory=input_directory,
+        targets=targets,
+        network=network,
+    )
+
+    probs_df.to_csv(
+        probs_output_path,
+        sep="\t",
+    )
+
+    auc_df.to_csv(
+        auc_output_path,
+        encoding="utf-8",
+        sep="\t",
+        index=False,
+    )
 
 
-def write_gat2vec_input_files(network: Network, targets: list, home_dir: str):
+def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: str):
     """Write the input files for gat2vec tool.
 
-    :param Network network: Network object with attributes overlayed on it.
+    :param network: Network object with attributes overlayed on it.
+    :param targets:
+    :param home_dir:
     """
     network.write_adj_list(gat2vec_paths.get_adjlist_path(home_dir, "graph"))
 
@@ -41,55 +87,43 @@ def write_gat2vec_input_files(network: Network, targets: list, home_dir: str):
     labeled_network.write_index_labels(targets, gat2vec_paths.get_labels_path(home_dir))
 
 
-def rank_targets(network: Network, targets: list, home_dir: str) -> pd.DataFrame:
-    """
-    Rank proteins based on their likelihood of being targets
+def rank_targets(network: Network, targets: List[str], directory: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Rank proteins based on their likelihood of being targets.
 
     :param network: The PPI network annotated with differential gene expression data.
     :param targets: A list of targets.
-    :param home_dir: Home directory for Gat2Vec.
-    :param ranked_targets_path: The path for writing the ranked proteins
-    :param auc_path: The path for writing the cross validation results
-    :return: The classification model
+    :param directory: Home directory for Gat2Vec.
+    :return: A 2-tuple of the auc dataframe and the probabilities dataframe?
     """
-    write_gat2vec_input_files(network=network, targets=targets, home_dir=home_dir)
+    write_gat2vec_input_files(network=network, targets=targets, home_dir=directory)
 
-    g2v = Gat2Vec(home_dir, home_dir, label=False, tr=TR)
+    g2v = Gat2Vec(directory, directory, label=False, tr=gat2vec_config.training_ratio)
     model = g2v.train_gat2vec(
-        NUM_WALKS,
-        WALK_LENGTH,
-        DIMENSION,
-        WINDOW_SIZE,
+        gat2vec_config.num_walks,
+        gat2vec_config.walk_length,
+        gat2vec_config.dimension,
+        gat2vec_config.window_size,
         output=True,
     )
-    clf_model = Classification(home_dir, home_dir, tr=TR)
+    classifier = Classification(directory, directory, tr=gat2vec_config.training_ratio)
 
-    results_model = clf_model.evaluate(model, label=False, evaluation_scheme="cv")
+    auc_df = classifier.evaluate(model, label=False, evaluation_scheme="cv")
+    probs_df = get_rankings(classifier, model, network)
 
-    save_rankings(clf_model, home_dir, model, network)
-
-    results_model.to_csv(
-        os.path.join(home_dir, AUC_FILE_NAME),
-        encoding="utf-8",
-        sep="\t",
-        index=False,
-    )
-
-    return results_model
+    return auc_df, probs_df
 
 
-def save_rankings(clf_model, home_dir, emb, network):
+def get_rankings(classifier: Classification, embedding: pd.DataFrame, network: Network) -> pd.DataFrame:
     """Save the predicted rankings to a file.
 
-    :param clf_model: Classification model.
-    :param home_dir: Home directory
-    :param emb: Embedding model
+    :param classifier: Classification model.
+    :param embedding: Embedding model
     :param network: PPI network with annotations
     """
-    probs_df = pd.DataFrame(clf_model.get_prediction_probs_for_entire_set(emb))
+    probs_df = pd.DataFrame(classifier.get_prediction_probs_for_entire_set(embedding))
     entrez_ids = network.get_attribute_from_indices(
         probs_df.index.values,
-        attribute_name="name"
+        attribute_name="name",
     )
     probs_df["Entrez"] = entrez_ids
-    probs_df.to_csv(os.path.join(home_dir, RANKED_TARGETS_FILE), sep="\t")
+    return probs_df

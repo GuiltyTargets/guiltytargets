@@ -1,88 +1,76 @@
-import click
+# -*- coding: utf-8 -*-
+
+"""Command line interface for GuiltyTargets."""
+
 import logging
 import os
+import warnings
 
-from guiltytargets.pipeline import rank_targets
-from guiltytargets.config import get_config
-from ppi_network_annotation.pipeline import generate_ppi_network
-from ppi_network_annotation.parsers import parse_gene_list
+import click
+from easy_config.contrib.click import args_from_config
+from sklearn.exceptions import UndefinedMetricWarning
+
+from guiltytargets.constants import GuiltyTargetsConfig
+from guiltytargets.pipeline import run
 
 logger = logging.getLogger(__name__)
 
+EMOJI = '🦑'
+
+warnings.filterwarnings('ignore', category=UndefinedMetricWarning)
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+warnings.filterwarnings('ignore', category=FutureWarning)
+
+
 @click.command()
-@click.option('--config-path',
-              prompt='Please enter the path to the config file',
-              help='Path to config file.')
-
-def main(config_path: str):
-    """Run GuiltyTargets.
-
-    :param str config_path: The path to the configuration file.
-    """
+@args_from_config(GuiltyTargetsConfig)
+def main(input_directory,
+         output_directory,
+         targets_file_name,
+         ppi_graph_file_name,
+         dge_file_name,
+         max_adj_p,
+         max_log2_fold_change,
+         min_log2_fold_change,
+         entrez_id_header,
+         log2_fold_change_header,
+         adj_p_header,
+         base_mean_header,
+         entrez_delimiter,
+         ppi_edge_min_confidence,
+         auc_output_file_name,
+         ranked_targets_output_file_name):
+    """"""
     logging.basicConfig(level=logging.INFO)
 
-    click.secho('getting config', color='cyan')
-    cfp = get_config(config_path)
+    assert os.path.exists(input_directory)
+    targets_path = os.path.join(input_directory, targets_file_name)
+    ppi_graph_path = os.path.join(input_directory, ppi_graph_file_name)
+    dge_path = os.path.join(input_directory, dge_file_name)
 
-    ppi_path = cfp['paths']['ppi_path']
-    assert os.path.exists(ppi_path)
+    os.makedirs(output_directory, exist_ok=True)
+    auc_output_path = os.path.join(output_directory, auc_output_file_name)
+    probs_output_path = os.path.join(output_directory, ranked_targets_output_file_name)
 
-    data_path = cfp['paths']['data_path']
-    assert os.path.exists(data_path)
-
-    targets_path = cfp['paths']['targets_path']
-    assert os.path.exists(targets_path)
-
-    hippie_min_edge_weight = cfp.getfloat('default', 'interaction_confidence_cutoff')
-    current_disease_ids_path = cfp.get('paths', 'disease_ids')
-    disease_associations_path = cfp.get('paths', 'disease_associations')
-
-    maximum_adjusted_p_value = cfp.getfloat('default', 'maximum_adjusted_p_value')
-    maximum_log2_fold_change = cfp.getfloat('default', 'maximum_log2_fold_change')
-    minimum_log2_fold_change = cfp.getfloat('default', 'minimum_log2_fold_change')
-
-    entrez_id_header = cfp['dge']['entrez_id']
-    log_fold_change_header = cfp['dge']['log2_fold_change']
-    adjusted_p_value_header = cfp['dge']['adjusted_p_value']
-    split_char = cfp['dge']['split_character']
-    base_mean_header = cfp.get('dge', 'base_mean')
-
-    gat2vec_input_directory = cfp['gat2vec']['home']
-    os.makedirs(gat2vec_input_directory, exist_ok=True)
-    gat2vec_result_output = cfp['gat2vec']['auc_g2v']
-    gat2vec_predictions_path = cfp['gat2vec']['predictions_path']
-
-    adjacency_list_path = cfp['gat2vec']['adjacency_list']
-    attribute_adjacency_list_path = cfp['gat2vec']['attribute_adjacency_list']
-
-    mapped_labels_path = cfp['gat2vec']['mapped_labels']
-
-    del cfp
-
-    click.secho('generating PPI network', color='cyan')
-    network = generate_ppi_network(
-        ppi_graph_path=ppi_path,
-        gene_expression_file_path=data_path,
-        maximum_adjusted_p_value=maximum_adjusted_p_value,
-        maximum_log2_fold_change=maximum_log2_fold_change,
-        minimum_log2_fold_change=minimum_log2_fold_change,
-        entrez_id_header=entrez_id_header,
-        log_fold_change_header=log_fold_change_header,
-        adjusted_p_value_header=adjusted_p_value_header,
-        base_mean_header=base_mean_header,
-        split_char=split_char,
-        hippie_min_edge_weight=hippie_min_edge_weight,
-        current_disease_ids_path=current_disease_ids_path,
-        disease_associations_path=disease_associations_path,
+    click.echo(f'{EMOJI} starting GuiltyTargets')
+    run(
+        input_directory,
+        targets_path,
+        ppi_graph_path,
+        dge_path,
+        auc_output_path,
+        probs_output_path,
+        max_adj_p,
+        max_log2_fold_change,
+        min_log2_fold_change,
+        entrez_id_header,
+        log2_fold_change_header,
+        adj_p_header,
+        base_mean_header,
+        entrez_delimiter,
+        ppi_edge_min_confidence,
     )
 
-    click.secho('ranking targets', color='cyan')
-    targets = parse_gene_list(targets_path, network.graph)
 
-    rank_targets(
-        home_dir=gat2vec_input_directory,
-        targets=targets,
-        ranked_targets_path=gat2vec_predictions_path,
-        network=network,
-        auc_path=gat2vec_result_output
-    )
+if __name__ == '__main__':
+    main()
