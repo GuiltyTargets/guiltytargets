@@ -12,7 +12,7 @@ from GAT2VEC.gat2vec import Gat2Vec
 from guiltytargets.constants import gat2vec_config
 from ppi_network_annotation.model import AttributeNetwork, LabeledNetwork, Network
 from ppi_network_annotation.parsers import parse_gene_list
-from ppi_network_annotation.pipeline import generate_ppi_network
+from ppi_network_annotation.pipeline import generate_ppi_network, parse_dge
 
 __all__ = [
     'run',
@@ -36,17 +36,20 @@ def run(input_directory,
         entrez_delimiter,
         ppi_edge_min_confidence) -> None:
     """Does it."""
-    network = generate_ppi_network(
-        ppi_graph_path=ppi_graph_path,
+    gene_list = parse_dge(
         dge_path=dge_path,
-        max_adj_p=max_adj_p,
-        max_log2_fold_change=max_log2_fold_change,
-        min_log2_fold_change=min_log2_fold_change,
         entrez_id_header=entrez_id_header,
         log2_fold_change_header=log2_fold_change_header,
         adj_p_header=adj_p_header,
-        base_mean_header=base_mean_header,
         entrez_delimiter=entrez_delimiter,
+        base_mean_header=base_mean_header,
+    )
+    network = generate_ppi_network(
+        ppi_graph_path=ppi_graph_path,
+        dge_list=gene_list,
+        max_adj_p=max_adj_p,
+        max_log2_fold_change=max_log2_fold_change,
+        min_log2_fold_change=min_log2_fold_change,
         ppi_edge_min_confidence=ppi_edge_min_confidence,
     )
 
