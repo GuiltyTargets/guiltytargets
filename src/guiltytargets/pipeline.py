@@ -10,9 +10,9 @@ from GAT2VEC.evaluation.classification import Classification
 from GAT2VEC.gat2vec import Gat2Vec
 
 from guiltytargets.constants import gat2vec_config
-from ppi_network_annotation.model import AttributeNetwork, LabeledNetwork, Network
+from ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, \
+    parse_dge
 from ppi_network_annotation.parsers import parse_gene_list
-from ppi_network_annotation.pipeline import generate_ppi_network, parse_dge
 
 __all__ = [
     'run',
@@ -90,7 +90,8 @@ def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: st
     labeled_network.write_index_labels(targets, gat2vec_paths.get_labels_path(home_dir))
 
 
-def rank_targets(network: Network, targets: List[str], directory: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def rank_targets(network: Network, targets: List[str], directory: str) -> Tuple[
+    pd.DataFrame, pd.DataFrame]:
     """Rank proteins based on their likelihood of being targets.
 
     :param network: The PPI network annotated with differential gene expression data.
@@ -116,7 +117,8 @@ def rank_targets(network: Network, targets: List[str], directory: str) -> Tuple[
     return auc_df, probs_df
 
 
-def get_rankings(classifier: Classification, embedding: pd.DataFrame, network: Network) -> pd.DataFrame:
+def get_rankings(classifier: Classification, embedding: pd.DataFrame,
+                 network: Network) -> pd.DataFrame:
     """Save the predicted rankings to a file.
 
     :param classifier: Classification model.

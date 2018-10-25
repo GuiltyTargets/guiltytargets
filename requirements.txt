@@ -1,10 +1,10 @@
 numpy
 pandas
 python_igraph
-rpy2
 scipy
 scikit-learn
 click
 tqdm
 easy-config
 -e git+https://github.com/ozlemmuslu/GAT2VEC#egg=GAT2VEC
+ppi-network-annotation

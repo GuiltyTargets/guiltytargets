@@ -35,6 +35,7 @@ INSTALL_REQUIRES = [
     'python-igraph',
     'click',
     'easy-config',
+    'ppi-network-annotation'
 ]
 
 EXTRAS_REQUIRE = {
@@ -49,7 +50,7 @@ ENTRY_POINTS = {
     ]
 }
 DEPENDENCY_LINKS = [
-
+    'https://github.com/ozlemmuslu/GAT2VEC/tarball/master#egg=GAT2VEC'
 ]
 
 PACKAGE_DATA = {
