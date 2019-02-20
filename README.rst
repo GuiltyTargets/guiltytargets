@@ -13,12 +13,10 @@ INSTALLATION
 ------------
 Download this repository, go to the directory it resides and run:
 
-.. highlight:: bash
 pip3 install -e .
 
 
 After that, you can use it as a library
-.. highlight:: python
 import guiltytargets
 
 
