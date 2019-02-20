@@ -4,6 +4,25 @@ OVERVIEW
 --------
 This is a tool for target prioritization using network representation learning
 
+REQUIREMENTS
+------------
+Python 3.6 or above
+Ubuntu 16.04 or above
+
+INSTALLATION
+------------
+Download this repository, go to the directory it resides and run:
+
+'''bash
+pip3 install -e .
+'''
+
+After that, you can use it as a library
+'''python
+import guiltytargets
+'''
+
+
 The user can set up the options to run the tool using the configuration file. More details can be found under README_CONFIGURATION.txt file.
 
 INPUT FILES
