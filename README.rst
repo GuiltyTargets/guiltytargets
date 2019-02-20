@@ -7,7 +7,6 @@ This is a tool for target prioritization using network representation learning
 REQUIREMENTS
 ------------
 Python 3.6 or above
-Ubuntu 16.04 or above
 
 INSTALLATION
 ------------
