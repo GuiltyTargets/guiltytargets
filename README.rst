@@ -12,11 +12,11 @@ INSTALLATION
 ------------
 Download this repository, go to the directory it resides and run:
 
-.. code-block:: bash
-   pip3 install -e .
+
 
 
 After that, you can use it as a library in Python
+
 .. code-block:: python
    from guiltytargets.pipeline import run
    run(input_directory,
