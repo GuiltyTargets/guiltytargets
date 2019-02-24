@@ -18,7 +18,10 @@ Download this repository, go to the directory it resides and run:
 
 After that, you can use it as a library in Python
 
+.. codeblock:: python
+
   from guiltytargets.pipeline import run
+  
   run(input_directory,
       targets_path,
       ppi_graph_path,
