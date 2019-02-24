@@ -12,6 +12,7 @@ INSTALLATION
 ------------
 Download this repository, go to the directory it resides and run:
 
+.. codeblock:: bash
 
   pip3 install -e .
 
