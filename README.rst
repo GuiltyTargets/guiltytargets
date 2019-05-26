@@ -41,7 +41,7 @@ After that, you can use it as a library in Python
 
 This will create files in paths ``auc_output_path`` and ``probs_output_path``, where the former shows the AUC values of cross validation and the latter shows the predicted targets.
 
-The parameters are explained below.
+The parameters are explained below. A use case can be found under https://github.com/GuiltyTargets/reproduction
 
 INPUT FILES
 -----------
