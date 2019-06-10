@@ -10,12 +10,14 @@ import click
 from easy_config.contrib.click import args_from_config
 from sklearn.exceptions import UndefinedMetricWarning
 
-from guiltytargets.constants import GuiltyTargetsConfig
-from guiltytargets.pipeline import run
+from .constants import EMOJI, GuiltyTargetsConfig
+from .pipeline import run
+
+__all__ = [
+    'main',
+]
 
 logger = logging.getLogger(__name__)
-
-EMOJI = '🦑'
 
 warnings.filterwarnings('ignore', category=UndefinedMetricWarning)
 warnings.filterwarnings('ignore', category=DeprecationWarning)
@@ -24,22 +26,24 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 
 @click.command()
 @args_from_config(GuiltyTargetsConfig)
-def main(input_directory,
-         output_directory,
-         targets_file_name,
-         ppi_graph_file_name,
-         dge_file_name,
-         max_adj_p,
-         max_log2_fold_change,
-         min_log2_fold_change,
-         entrez_id_header,
-         log2_fold_change_header,
-         adj_p_header,
-         base_mean_header,
-         entrez_delimiter,
-         ppi_edge_min_confidence,
-         auc_output_file_name,
-         ranked_targets_output_file_name):
+def main(
+        input_directory,
+        output_directory,
+        targets_file_name,
+        ppi_graph_file_name,
+        dge_file_name,
+        max_adj_p,
+        max_log2_fold_change,
+        min_log2_fold_change,
+        entrez_id_header,
+        log2_fold_change_header,
+        adj_p_header,
+        base_mean_header,
+        entrez_delimiter,
+        ppi_edge_min_confidence,
+        auc_output_file_name,
+        ranked_targets_output_file_name,
+) -> None:
     """"""
     logging.basicConfig(level=logging.INFO)
 

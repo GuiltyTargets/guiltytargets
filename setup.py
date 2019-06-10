@@ -34,8 +34,10 @@ INSTALL_REQUIRES = [
     'scikit-learn',
     'python-igraph',
     'click',
+    'tqdm',
     'easy-config',
-    'ppi-network-annotation'
+    'gat2vec @ git+https://github.com/ozlemmuslu/GAT2VEC.git',
+    'ppi-network-annotation',
 ]
 
 EXTRAS_REQUIRE = {

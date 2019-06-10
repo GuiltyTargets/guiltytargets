@@ -7,6 +7,8 @@ from typing import Tuple
 
 from easy_config import EasyConfig
 
+EMOJI = '🦑'
+
 _USER_HOME = os.path.expanduser('~')
 _CONFIG_DIRECTORY = os.path.join(_USER_HOME, '.config')
 _GUILTY_TARGETS_CONFIG_DIRECTORY = os.path.join(_CONFIG_DIRECTORY, 'guiltytargets')

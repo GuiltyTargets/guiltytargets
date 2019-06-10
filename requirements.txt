@@ -1,9 +1,3 @@
-numpy
-pandas
-python_igraph
-scipy
-scikit-learn
-click
 tqdm
 easy-config
 -e git+https://github.com/ozlemmuslu/GAT2VEC#egg=GAT2VEC

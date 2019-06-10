@@ -5,14 +5,11 @@
 from typing import List, Tuple
 
 import pandas as pd
-from GAT2VEC import paths as gat2vec_paths
-from GAT2VEC.evaluation.classification import Classification
-from GAT2VEC.gat2vec import Gat2Vec
 
-from guiltytargets.constants import gat2vec_config
-from ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, \
-    parse_dge
+from ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, parse_dge
 from ppi_network_annotation.parsers import parse_gene_list
+from .constants import gat2vec_config
+from .gat2vec import Classification, Gat2Vec, gat2vec_paths
 
 __all__ = [
     'run',
@@ -20,7 +17,8 @@ __all__ = [
 ]
 
 
-def run(input_directory,
+def run(
+        input_directory,
         targets_path,
         ppi_graph_path,
         dge_path,
@@ -34,7 +32,8 @@ def run(input_directory,
         adj_p_header,
         base_mean_header,
         entrez_delimiter,
-        ppi_edge_min_confidence) -> None:
+        ppi_edge_min_confidence,
+) -> None:
     """Does it."""
     gene_list = parse_dge(
         dge_path=dge_path,
@@ -90,8 +89,11 @@ def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: st
     labeled_network.write_index_labels(targets, gat2vec_paths.get_labels_path(home_dir))
 
 
-def rank_targets(network: Network, targets: List[str], directory: str) -> Tuple[
-    pd.DataFrame, pd.DataFrame]:
+def rank_targets(
+        network: Network,
+        targets: List[str],
+        directory: str,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Rank proteins based on their likelihood of being targets.
 
     :param network: The PPI network annotated with differential gene expression data.
@@ -117,8 +119,11 @@ def rank_targets(network: Network, targets: List[str], directory: str) -> Tuple[
     return auc_df, probs_df
 
 
-def get_rankings(classifier: Classification, embedding: pd.DataFrame,
-                 network: Network) -> pd.DataFrame:
+def get_rankings(
+        classifier: Classification,
+        embedding: pd.DataFrame,
+        network: Network,
+) -> pd.DataFrame:
     """Save the predicted rankings to a file.
 
     :param classifier: Classification model.
@@ -126,9 +131,8 @@ def get_rankings(classifier: Classification, embedding: pd.DataFrame,
     :param network: PPI network with annotations
     """
     probs_df = pd.DataFrame(classifier.get_prediction_probs_for_entire_set(embedding))
-    entrez_ids = network.get_attribute_from_indices(
+    probs_df['Entrez'] = network.get_attribute_from_indices(
         probs_df.index.values,
-        attribute_name="name",
+        attribute_name='name',
     )
-    probs_df["Entrez"] = entrez_ids
     return probs_df
