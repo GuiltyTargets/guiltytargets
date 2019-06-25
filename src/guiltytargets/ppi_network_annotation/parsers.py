@@ -5,7 +5,7 @@
 import logging
 import os
 from collections import defaultdict
-from typing import List
+from typing import List, Set
 
 import igraph
 import pandas as pd
@@ -142,17 +142,17 @@ def _handle_dataframe(
     ]
 
 
-def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> list:
+def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
     """Parse a list of genes and return them if they are in the network.
 
     :param path: The path of input file.
     :param graph: The graph with genes as nodes.
     :param anno_type: The type of annotation with two options:name-Entrez ID, symbol-HGNC symbol.
-    :return list: A list of genes, all of which are in the network.
+    :return: A list of genes, all of which are in the network.
     """
     # read the file
-    genes = pd.read_csv(path, header=None)[0].tolist()
-    genes = [str(int(gene)) for gene in genes]
+    df = pd.read_csv(path, sep='\t')
+    genes = df.ncbigene.map(str).tolist()
 
     # get those genes which are in the network
     if anno_type == "name":
@@ -166,15 +166,15 @@ def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> list:
     return genes
 
 
-def parse_disease_ids(path: str):
+def parse_disease_ids(path: str) -> Set[str]:
     """Parse the disease identifier file.
 
-    :param str path: Path to the disease identifier file.
+    :param path: Path to the disease identifier file.
     :return: List of disease identifiers.
     """
     if os.path.isdir(path) or not os.path.exists(path):
         logger.info("Couldn't find the disease identifiers file. Returning empty list.")
-        return []
+        return set()
 
     df = pd.read_csv(path, names=["ID"])
     return set(df["ID"].tolist())
@@ -192,9 +192,11 @@ def parse_disease_associations(path: str, excluded_disease_ids: set):
         return {}
 
     disease_associations = defaultdict(list)
+
     with open(path) as input_file:
         for line in input_file:
             target_id, disease_id = line.strip().split(" ")
             if disease_id not in excluded_disease_ids:
                 disease_associations[target_id].append(disease_id)
+
     return dict(disease_associations)
