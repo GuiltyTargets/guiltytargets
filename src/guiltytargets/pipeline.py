@@ -6,10 +6,10 @@ from typing import List, Tuple
 
 import pandas as pd
 
-from ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, parse_dge
-from ppi_network_annotation.parsers import parse_gene_list
 from .constants import gat2vec_config
 from .gat2vec import Classification, Gat2Vec, gat2vec_paths
+from .ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, parse_dge
+from .ppi_network_annotation.parsers import parse_gene_list
 
 __all__ = [
     'run',

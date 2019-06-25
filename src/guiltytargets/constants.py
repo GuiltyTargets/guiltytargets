@@ -9,11 +9,12 @@ from easy_config import EasyConfig
 
 EMOJI = '🦑'
 
-_USER_HOME = os.path.expanduser('~')
-_CONFIG_DIRECTORY = os.path.join(_USER_HOME, '.config')
+_CONFIG_DIRECTORY = os.path.join(os.path.expanduser('~'), '.config')
 _GUILTY_TARGETS_CONFIG_DIRECTORY = os.path.join(_CONFIG_DIRECTORY, 'guiltytargets')
 
 CONFIG_FILE_PATHS = [
+    os.path.join(_CONFIG_DIRECTORY, 'guiltytargets.cfg'),
+    os.path.join(_CONFIG_DIRECTORY, 'guiltytargets.ini'),
     os.path.join(_GUILTY_TARGETS_CONFIG_DIRECTORY, 'cfg.ini'),
     os.path.join(_GUILTY_TARGETS_CONFIG_DIRECTORY, 'config.ini')
 ]
