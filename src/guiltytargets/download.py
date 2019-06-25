@@ -3,6 +3,7 @@
 """Utilities for GuiltyTargets-Results."""
 
 import io
+import os
 from typing import Optional, TextIO
 
 import pandas as pd
@@ -17,6 +18,8 @@ __all__ = [
 
 
 def download_hippie(*, url, path):
+    if os.path.exists(path):
+        return
     s = requests.get(url).content
     cols = ['symbol1', 'entrez1', 'symbol2', 'entrez2', 'confidence', 'description']
     df = pd.read_csv(io.StringIO(s.decode('utf-8')), sep='\t', header=None, names=cols)
