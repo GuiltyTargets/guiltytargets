@@ -151,11 +151,11 @@ def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
     :return: A list of genes, all of which are in the network.
     """
     # read the file
-    df = pd.read_csv(path, sep='\t')
-    genes = df.ncbigene.map(str).tolist()
+    genes = pd.read_csv(path, header=None)[0].tolist()
 
     # get those genes which are in the network
     if anno_type == "name":
+        genes = [str(int(gene)) for gene in genes]
         ind = graph.vs.select(name_in=genes).indices
     elif anno_type == "symbol":
         ind = graph.vs.select(symbol_in=genes).indices
