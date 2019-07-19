@@ -89,7 +89,7 @@ def parse_dge(
             log_fold_change_header=log2_fold_change_header,
             adjusted_p_value_header=adj_p_header,
             entrez_delimiter=entrez_delimiter,
-            base_mean_header=base_mean_header,
+            base_mean_header=base_mean_header, sep=';'
         )
 
     if dge_path.endswith('.tsv'):

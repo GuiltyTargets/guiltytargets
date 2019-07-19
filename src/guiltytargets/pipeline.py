@@ -2,14 +2,14 @@
 
 """Pipeline for GuiltyTargets."""
 
-from typing import List, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import pandas as pd
 
 from .constants import gat2vec_config
 from .gat2vec import Classification, Gat2Vec, gat2vec_paths
 from .ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, parse_dge
-from .ppi_network_annotation.parsers import parse_gene_list
+from .ppi_network_annotation.parsers import parse_association_scores, parse_gene_list
 
 __all__ = [
     'run',
@@ -33,6 +33,7 @@ def run(
         base_mean_header,
         entrez_delimiter,
         ppi_edge_min_confidence,
+        assoc_path
 ) -> None:
     """Does it."""
     gene_list = parse_dge(
@@ -54,10 +55,13 @@ def run(
 
     targets = parse_gene_list(targets_path, network.graph)
 
+    assoc_score = assoc_path and parse_association_scores(assoc_path)
+
     auc_df, probs_df = rank_targets(
         directory=input_directory,
         targets=targets,
         network=network,
+        assoc_score=assoc_score,
     )
 
     probs_df.to_csv(
@@ -73,12 +77,18 @@ def run(
     )
 
 
-def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: str):
+def write_gat2vec_input_files(
+        network: Network,
+        targets: List[str],
+        home_dir: str,
+        assoc_score: Optional[Dict] = None
+):
     """Write the input files for gat2vec tool.
 
     :param network: Network object with attributes overlayed on it.
     :param targets:
     :param home_dir:
+    :param assoc_score:
     """
     network.write_adj_list(gat2vec_paths.get_adjlist_path(home_dir, "graph"))
 
@@ -86,22 +96,37 @@ def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: st
     attribute_network.write_attribute_adj_list(gat2vec_paths.get_adjlist_path(home_dir, "na"))
 
     labeled_network = LabeledNetwork(network)
-    labeled_network.write_index_labels(targets, gat2vec_paths.get_labels_path(home_dir))
+    labeled_network.write_index_labels(
+        targets,
+        gat2vec_paths.get_labels_path(home_dir),
+        sample_scores=assoc_score
+    )
 
 
 def rank_targets(
         network: Network,
         targets: List[str],
         directory: str,
+        evaluation: str = 'cv',
+        assoc_score: Optional[Dict] = None,
+        class_weights: Optional[Union[Dict, str]] = None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Rank proteins based on their likelihood of being targets.
 
     :param network: The PPI network annotated with differential gene expression data.
     :param targets: A list of targets.
     :param directory: Home directory for Gat2Vec.
+    :param evaluation: Type of evaluation. Currently `svm` or `cv`.
+    :param assoc_score: List of genetic association scores.
+    :param class_weights: .
     :return: A 2-tuple of the auc dataframe and the probabilities dataframe?
     """
-    write_gat2vec_input_files(network=network, targets=targets, home_dir=directory)
+    write_gat2vec_input_files(
+        network=network,
+        targets=targets,
+        home_dir=directory,
+        assoc_score=assoc_score
+    )
 
     g2v = Gat2Vec(directory, directory, label=False, tr=gat2vec_config.training_ratio)
     model = g2v.train_gat2vec(
@@ -113,7 +138,7 @@ def rank_targets(
     )
     classifier = Classification(directory, directory, tr=gat2vec_config.training_ratio)
 
-    auc_df = classifier.evaluate(model, label=False, evaluation_scheme="cv")
+    auc_df = classifier.evaluate(model, label=False, evaluation_scheme=evaluation, class_weights=class_weights)
     probs_df = get_rankings(classifier, model, network)
 
     return auc_df, probs_df

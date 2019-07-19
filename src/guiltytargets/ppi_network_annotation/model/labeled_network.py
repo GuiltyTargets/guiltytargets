@@ -23,17 +23,25 @@ class LabeledNetwork:
         """
         self.graph = network.graph
 
-    def write_index_labels(self, targets, output_path):
+    def write_index_labels(self, targets, output_path, sample_scores: dict = None):
         """Write the mappings between vertex indices and labels(target vs. not) to a file.
 
         :param list targets: List of known targets.
         :param str output_path: Path to the output file.
+        :param str sample_scores: Sample scores from OpenTarget.
         """
         label_mappings = self.get_index_labels(targets)
 
         with open(output_path, "w") as file:
             for k, v in label_mappings.items():
-                print(k, v, sep='\t', file=file)
+                if sample_scores:
+                    if self.graph.vs[k]["name"] in sample_scores:
+                        score = self._convert_score_to_weight(v, sample_scores[self.graph.vs[k]["name"]])
+                        print(k, v, score, sep='\t', file=file)
+                    else:
+                        print(k, v, '1.', sep='\t', file=file)
+                else:
+                    print(k, v, sep='\t', file=file)
 
     def get_index_labels(self, targets):
         """Get the labels(known target/not) mapped to indices.
@@ -46,3 +54,18 @@ class LabeledNetwork:
         label_mappings = {i: 1 for i in target_ind}
         label_mappings.update({i: 0 for i in rest_ind})
         return label_mappings
+
+    @staticmethod
+    def _convert_score_to_weight(label: int, score: float) -> float:
+        """Convert the association score into a weight for the weighted classification. If the
+        label is positive the weight is the score. If negative, the weight is 1 - score. This means,
+        a high score for a negative label will imply some uncertainty about it being a target.
+
+        :param label: 1 for positive, 0 for negative.
+        :param score: The association score.
+        :return: The weight.
+        """
+        if label:
+            return score
+        else:
+            return 1 - score

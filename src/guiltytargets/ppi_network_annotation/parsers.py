@@ -20,6 +20,7 @@ __all__ = [
     'parse_excel',
     'parse_ppi_graph',
     'parse_gene_list',
+    'parse_association_scores',
 ]
 
 logger = logging.getLogger(__name__)
@@ -154,7 +155,8 @@ def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
     df = pd.read_csv(
         path,
         names=['gene'],
-        dtype={'gene': str}
+        dtype={'gene': str},
+        sep='\t'
     )
     genes = list(df['gene'])
 
@@ -169,6 +171,27 @@ def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
     genes = graph.vs[ind][anno_type]
 
     return genes
+
+
+def parse_association_scores(path: str) -> dict:
+    """Parse a list of genes and return them if they are in the network.
+
+    :param path: The path of input file.
+    :param graph: The graph with genes as nodes.
+    :param anno_type: The type of annotation with two options:name-Entrez ID, symbol-HGNC symbol.
+    :return: A list of genes, all of which are in the network.
+    """
+    # read the file
+    df = pd.read_csv(
+        path,
+        sep='\t',
+        names=['gene', 'score'],
+        dtype={'gene': str, 'score': float}
+    )
+    scores = {gene: score for _, (gene, score) in df.iterrows()}
+
+    # get those genes which are in the network
+    return scores
 
 
 def parse_disease_ids(path: str) -> Set[str]:
