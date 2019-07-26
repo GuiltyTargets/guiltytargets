@@ -174,12 +174,10 @@ def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
 
 
 def parse_association_scores(path: str) -> dict:
-    """Parse a list of genes and return them if they are in the network.
+    """Parse a list of association scores.
 
     :param path: The path of input file.
-    :param graph: The graph with genes as nodes.
-    :param anno_type: The type of annotation with two options:name-Entrez ID, symbol-HGNC symbol.
-    :return: A list of genes, all of which are in the network.
+    :return: A dictionary of genes and the association scores to the disease in study.
     """
     # read the file
     df = pd.read_csv(

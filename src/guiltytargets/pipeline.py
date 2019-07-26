@@ -57,11 +57,16 @@ def run(
 
     assoc_score = assoc_path and parse_association_scores(assoc_path)
 
+    write_gat2vec_input_files(
+        network=network,
+        targets=targets,
+        home_dir=input_directory,
+        assoc_score=assoc_score
+    )
+
     auc_df, probs_df = rank_targets(
         directory=input_directory,
-        targets=targets,
         network=network,
-        assoc_score=assoc_score,
     )
 
     probs_df.to_csv(
@@ -105,43 +110,42 @@ def write_gat2vec_input_files(
 
 def rank_targets(
         network: Network,
-        targets: List[str],
         directory: str,
         evaluation: str = 'cv',
-        assoc_score: Optional[Dict] = None,
         class_weights: Optional[Union[Dict, str]] = None,
+        num_walks=gat2vec_config.num_walks,
+        walk_length=gat2vec_config.walk_length,
+        dimension=gat2vec_config.dimension,
+        window_size=gat2vec_config.window_size,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Rank proteins based on their likelihood of being targets.
 
     :param network: The PPI network annotated with differential gene expression data.
-    :param targets: A list of targets.
     :param directory: Home directory for Gat2Vec.
     :param evaluation: Type of evaluation. Currently `svm` or `cv`.
-    :param assoc_score: List of genetic association scores.
     :param class_weights: .
+    :param num_walks: Gat2Vec Parameter.
+    :param walk_length: Gat2Vec Parameter.
+    :param dimension: Gat2Vec Parameter.
+    :param window_size: Gat2Vec Parameter.
     :return: A 2-tuple of the auc dataframe and the probabilities dataframe?
     """
-    write_gat2vec_input_files(
-        network=network,
-        targets=targets,
-        home_dir=directory,
-        assoc_score=assoc_score
-    )
-
     g2v = Gat2Vec(directory, directory, label=False, tr=gat2vec_config.training_ratio)
     model = g2v.train_gat2vec(
-        gat2vec_config.num_walks,
-        gat2vec_config.walk_length,
-        gat2vec_config.dimension,
-        gat2vec_config.window_size,
+        num_walks,
+        walk_length,
+        dimension,
+        window_size,
         output=True,
     )
     classifier = Classification(directory, directory, tr=gat2vec_config.training_ratio)
 
     auc_df = classifier.evaluate(model, label=False, evaluation_scheme=evaluation, class_weights=class_weights)
-    probs_df = get_rankings(classifier, model, network)
+    # TODO use probs DF for BEL.
+    # TODO Should this be different in case of SVM?
+    # probs_df = get_rankings(classifier, model, network)
 
-    return auc_df, probs_df
+    return auc_df, pd.DataFrame()# probs_df
 
 
 def get_rankings(
@@ -156,6 +160,8 @@ def get_rankings(
     :param network: PPI network with annotations
     """
     probs_df = pd.DataFrame(classifier.get_prediction_probs_for_entire_set(embedding))
+    print('pipeline.get_rankings ')
+    print(probs_df.shape)
     probs_df['Entrez'] = network.get_attribute_from_indices(
         probs_df.index.values,
         attribute_name='name',
