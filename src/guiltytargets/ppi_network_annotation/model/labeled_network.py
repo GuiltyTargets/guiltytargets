@@ -31,6 +31,9 @@ class LabeledNetwork:
         :param str sample_scores: Sample scores from OpenTarget.
         """
         label_mappings = self.get_index_labels(targets)
+        print('labeled_network.write_index_labels')
+        print('labeled_network._convert_score_to_weightz')
+        print('known targets have weight fixed to 1.')
 
         with open(output_path, "w") as file:
             for k, v in label_mappings.items():
@@ -66,6 +69,7 @@ class LabeledNetwork:
         :return: The weight.
         """
         if label:
-            return score
+            # return score
+            return 1.  # Fix positive labels to weight 100% always.
         else:
             return 1 - score
