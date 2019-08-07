@@ -14,6 +14,7 @@ from .ppi_network_annotation.parsers import parse_association_scores, parse_gene
 __all__ = [
     'run',
     'rank_targets',
+    'write_gat2vec_input_files'
 ]
 
 
@@ -143,9 +144,12 @@ def rank_targets(
     auc_df = classifier.evaluate(model, label=False, evaluation_scheme=evaluation, class_weights=class_weights)
     # TODO use probs DF for BEL.
     # TODO Should this be different in case of SVM?
-    # probs_df = get_rankings(classifier, model, network)
-
-    return auc_df, pd.DataFrame()# probs_df
+    try:
+        probs_df = get_rankings(classifier, model, network)
+    except:
+        print('gt.pipeline - Need to fix rank_targets from some classification methods.')
+        probs_df = pd.DataFrame()
+    return auc_df, probs_df
 
 
 def get_rankings(
@@ -160,8 +164,6 @@ def get_rankings(
     :param network: PPI network with annotations
     """
     probs_df = pd.DataFrame(classifier.get_prediction_probs_for_entire_set(embedding))
-    print('pipeline.get_rankings ')
-    print(probs_df.shape)
     probs_df['Entrez'] = network.get_attribute_from_indices(
         probs_df.index.values,
         attribute_name='name',
