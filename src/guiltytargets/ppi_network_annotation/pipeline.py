@@ -92,7 +92,7 @@ def parse_dge(
             base_mean_header=base_mean_header, sep=';'
         )
 
-    if dge_path.endswith('.tsv'):
+    if dge_path.endswith('.tsv') or dge_path.endswith('.gz'):
         return parse_csv(
             dge_path,
             entrez_id_header=entrez_id_header,
