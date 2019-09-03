@@ -9,6 +9,8 @@ import numpy as np
 from igraph import Graph, Vertex, VertexSeq
 
 from .gene import Gene
+from .attribute_network import AttributeNetwork
+from .labeled_network import LabeledNetwork
 
 __all__ = [
     'Network',
@@ -206,3 +208,21 @@ class Network:
         :return: A list of attribute values for the requested indices.
         """
         return list(np.array(self.graph.vs[attribute_name])[indices])
+
+    def get_labeled_network(self):
+        return LabeledNetwork(self)
+
+    def get_attribute_network(self):
+        return AttributeNetwork(self)
+
+    def find_genes(self, gene_list: list, anno_type: str = "name"):
+        if anno_type == "name":
+            ind = self.graph.vs.select(name_in=gene_list).indices
+        elif anno_type == "symbol":
+            ind = self.graph.vs.select(symbol_in=gene_list).indices
+        else:
+            raise Exception(f"The type can either be name or symbol, {anno_type} is not supported")
+
+        gene_list = self.graph.vs[ind][anno_type]
+
+        return gene_list

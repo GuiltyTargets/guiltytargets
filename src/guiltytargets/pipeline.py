@@ -54,7 +54,7 @@ def run(
         ppi_edge_min_confidence=ppi_edge_min_confidence,
     )
 
-    targets = parse_gene_list(targets_path, network.graph)
+    targets = parse_gene_list(targets_path, network)
 
     assoc_score = assoc_path and parse_association_scores(assoc_path)
 
@@ -98,10 +98,10 @@ def write_gat2vec_input_files(
     """
     network.write_adj_list(gat2vec_paths.get_adjlist_path(home_dir, "graph"))
 
-    attribute_network = AttributeNetwork(network)
+    attribute_network = network.get_attribute_network()
     attribute_network.write_attribute_adj_list(gat2vec_paths.get_adjlist_path(home_dir, "na"))
 
-    labeled_network = LabeledNetwork(network)
+    labeled_network = network.get_labeled_network()
     labeled_network.write_index_labels(
         targets,
         gat2vec_paths.get_labels_path(home_dir),

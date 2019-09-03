@@ -5,8 +5,6 @@
 import logging
 from collections import defaultdict
 
-from .network import Network
-
 __all__ = [
     'AttributeNetwork',
 ]
@@ -17,7 +15,7 @@ logger = logging.getLogger(__name__)
 class AttributeNetwork:
     """Mimic encapsulation of a bipartite attribute network for Gat2Vec."""
 
-    def __init__(self, network: Network):
+    def __init__(self, network):
         """Initialize the network object.
 
         :param network: A PPI network annotated with differential gene expression and disease association.

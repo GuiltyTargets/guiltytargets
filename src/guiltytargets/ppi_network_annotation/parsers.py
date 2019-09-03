@@ -143,15 +143,18 @@ def _handle_dataframe(
     ]
 
 
-def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
+def parse_gene_list(path: str, network, anno_type: str = "name") -> List:
     """Parse a list of genes and return them if they are in the network.
 
     :param path: The path of input file.
-    :param graph: The graph with genes as nodes.
+    :param network: The network with genes as nodes.
     :param anno_type: The type of annotation with two options:name-Entrez ID, symbol-HGNC symbol.
     :return: A list of genes, all of which are in the network.
     """
+    # TODO changed for a polymorphism friendly code!! (the signature changed)
     # read the file
+    if isinstance(network, Graph):
+        raise Exception('This function changed, pass a Network object instead.')
     df = pd.read_csv(
         path,
         names=['gene'],
@@ -161,16 +164,7 @@ def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
     genes = list(df['gene'])
 
     # get those genes which are in the network
-    if anno_type == "name":
-        ind = graph.vs.select(name_in=genes).indices
-    elif anno_type == "symbol":
-        ind = graph.vs.select(symbol_in=genes).indices
-    else:
-        raise Exception(f"The type can either be name or symbol, {anno_type} is not supported")
-
-    genes = graph.vs[ind][anno_type]
-
-    return genes
+    return network.find_genes(gene_list=genes, anno_type=anno_type)
 
 
 def parse_association_scores(path: str) -> dict:
@@ -188,7 +182,6 @@ def parse_association_scores(path: str) -> dict:
     )
     scores = {gene: score for _, (gene, score) in df.iterrows()}
 
-    # get those genes which are in the network
     return scores
 
 

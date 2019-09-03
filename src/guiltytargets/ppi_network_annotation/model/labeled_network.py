@@ -4,8 +4,6 @@
 
 import logging
 
-from .network import Network
-
 __all__ = [
     'LabeledNetwork',
 ]
@@ -16,7 +14,7 @@ logger = logging.getLogger(__name__)
 class LabeledNetwork:
     """Mimic encapsulation of a labeled and annotated PPI network for Gat2Vec."""
 
-    def __init__(self, network: Network):
+    def __init__(self, network):
         """Initialize the network object.
 
         :param network: A PPI network annotated with differential gene expression and disease association.
