@@ -29,9 +29,6 @@ class LabeledNetwork:
         :param str sample_scores: Sample scores from OpenTarget.
         """
         label_mappings = self.get_index_labels(targets)
-        print('labeled_network.write_index_labels')
-        print('labeled_network._convert_score_to_weightz')
-        print('known targets have weight fixed to 1.')
 
         with open(output_path, "w") as file:
             for k, v in label_mappings.items():
@@ -59,15 +56,15 @@ class LabeledNetwork:
     @staticmethod
     def _convert_score_to_weight(label: int, score: float) -> float:
         """Convert the association score into a weight for the weighted classification. If the
-        label is positive the weight is the score. If negative, the weight is 1 - score. This means,
-        a high score for a negative label will imply some uncertainty about it being a target.
+        label is positive the weight is 1. If negative, the weight is 1 - score. This means,
+        that only negative samples are being down-weighted and that a high score for a negative
+        label will imply some uncertainty about it not being a target.
 
         :param label: 1 for positive, 0 for negative.
         :param score: The association score.
         :return: The weight.
         """
         if label:
-            # return score
-            return 1.  # Fix positive labels to weight 100% always.
+            return 1.  # Fix positive labels to weight 100%.
         else:
             return 1 - score

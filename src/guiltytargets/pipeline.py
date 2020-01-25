@@ -8,7 +8,7 @@ import pandas as pd
 
 from .constants import gat2vec_config
 from .gat2vec import Classification, Gat2Vec, gat2vec_paths
-from .ppi_network_annotation import AttributeNetwork, LabeledNetwork, Network, generate_ppi_network, parse_dge
+from .ppi_network_annotation import Network, generate_ppi_network, parse_dge
 from .ppi_network_annotation.parsers import parse_association_scores, parse_gene_list
 
 __all__ = [
@@ -142,8 +142,6 @@ def rank_targets(
     classifier = Classification(directory, directory, tr=gat2vec_config.training_ratio)
 
     auc_df = classifier.evaluate(model, label=False, evaluation_scheme=evaluation, class_weights=class_weights)
-    # TODO use probs DF for BEL.
-    # TODO Should this be different in case of SVM?
     try:
         probs_df = get_rankings(classifier, model, network)
     except:
