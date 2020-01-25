@@ -26,15 +26,16 @@ __all__ = [
 logger = logging.getLogger(__name__)
 
 
-def parse_ppi_graph(path: str, min_edge_weight: float = 0.0) -> Graph:
+def parse_ppi_graph(path: str, min_edge_weight: float = 0.0, format: str = 'ncol') -> Graph:
     """Build an undirected graph of gene interactions from edgelist file.
 
     :param str path: The path to the edgelist file
     :param float min_edge_weight: Cutoff to keep/remove the edges, default is 0, but could also be 0.63.
+    :param str format: The format of the ppi graph file.
     :return Graph: Protein-protein interaction graph
     """
     logger.info("In parse_ppi_graph()")
-    graph = igraph.read(os.path.expanduser(path), format="ncol", directed=False, names=True)
+    graph = igraph.read(os.path.expanduser(path), format=format, directed=False, names=True)
     graph.delete_edges(graph.es.select(weight_lt=min_edge_weight))
     graph.delete_vertices(graph.vs.select(_degree=0))
     logger.info(f"Loaded PPI network.\n"
