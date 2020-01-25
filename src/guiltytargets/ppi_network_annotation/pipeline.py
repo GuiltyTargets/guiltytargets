@@ -60,7 +60,8 @@ def parse_dge(
         log2_fold_change_header: str,
         adj_p_header: str,
         entrez_delimiter: str,
-        base_mean_header: Optional[str] = None
+        base_mean_header: Optional[str] = None,
+        csv_separator: str = ','
 ) -> List[Gene]:
     """Parse a differential expression file.
 
@@ -70,6 +71,7 @@ def parse_dge(
     :param adj_p_header: Header for the adjusted p-value column
     :param entrez_delimiter: Delimiter between Entrez ids.
     :param base_mean_header: Header for the base mean column.
+    :param csv_separator: Separator for csv. It may be `,' or `;'.
     :return: A list of genes.
     """
     if dge_path.endswith('.xlsx'):
@@ -89,7 +91,8 @@ def parse_dge(
             log_fold_change_header=log2_fold_change_header,
             adjusted_p_value_header=adj_p_header,
             entrez_delimiter=entrez_delimiter,
-            base_mean_header=base_mean_header, sep=';'
+            base_mean_header=base_mean_header,
+            sep=csv_separator
         )
 
     if dge_path.endswith('.tsv') or dge_path.endswith('.gz'):
