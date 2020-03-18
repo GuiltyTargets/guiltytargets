@@ -1,4 +1,3 @@
 # -*- coding: utf-8 -*-
 
-"""Tool for prioritizing proteins based on their likelihood of being targets in the context of a
-specific disease."""
+"""Tool for prioritizing proteins based on their likelihood of being targets in the context of a specific disease."""

@@ -16,7 +16,7 @@ CONFIG_FILE_PATHS = [
     os.path.join(_CONFIG_DIRECTORY, 'guiltytargets.cfg'),
     os.path.join(_CONFIG_DIRECTORY, 'guiltytargets.ini'),
     os.path.join(_GUILTY_TARGETS_CONFIG_DIRECTORY, 'cfg.ini'),
-    os.path.join(_GUILTY_TARGETS_CONFIG_DIRECTORY, 'config.ini')
+    os.path.join(_GUILTY_TARGETS_CONFIG_DIRECTORY, 'config.ini'),
 ]
 
 
@@ -64,23 +64,23 @@ class GuiltyTargetsConfig(EasyConfig):
     """Derived configuration properties"""
 
     @property
-    def auc_output_path(self) -> str:
+    def auc_output_path(self) -> str:  # noqa: D102
         return os.path.join(self.output_directory, self.auc_output_file_name)
 
     @property
-    def ranked_targets_output_path(self) -> str:
+    def ranked_targets_output_path(self) -> str:  # noqa: D102
         return os.path.join(self.output_directory, self.ranked_targets_output_file_name)
 
     @property
-    def ppi_graph_path(self) -> str:
+    def ppi_graph_path(self) -> str:  # noqa: D102
         return os.path.join(self.input_directory, self.ppi_graph_file_name)
 
     @property
-    def dge_path(self) -> str:
+    def dge_path(self) -> str:  # noqa: D102
         return os.path.join(self.input_directory, self.dge_file_name)
 
     @property
-    def targets_path(self) -> str:
+    def targets_path(self) -> str:  # noqa: D102
         return os.path.join(self.input_directory, self.targets_file_name)
 
 

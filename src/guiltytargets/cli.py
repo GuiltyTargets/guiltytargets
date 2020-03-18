@@ -27,27 +27,27 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 @click.command()
 @args_from_config(GuiltyTargetsConfig)
 def main(
-        input_directory,
-        output_directory,
-        targets_file_name,
-        ppi_graph_file_name,
-        dge_file_name,
-        max_adj_p,
-        max_log2_fold_change,
-        min_log2_fold_change,
-        entrez_id_header,
-        log2_fold_change_header,
-        adj_p_header,
-        base_mean_header,
-        entrez_delimiter,
-        ppi_edge_min_confidence,
-        auc_output_file_name,
-        ranked_targets_output_file_name,
+    input_directory,
+    output_directory,
+    targets_file_name,
+    ppi_graph_file_name,
+    dge_file_name,
+    max_adj_p,
+    max_log2_fold_change,
+    min_log2_fold_change,
+    entrez_id_header,
+    log2_fold_change_header,
+    adj_p_header,
+    base_mean_header,
+    entrez_delimiter,
+    ppi_edge_min_confidence,
+    auc_output_file_name,
+    ranked_targets_output_file_name,
 ) -> None:
-    """"""
-    logging.basicConfig(level=logging.INFO)
+    """Run the GuiltyTargets pipeline."""
+    if not os.path.exists(input_directory):
+        raise FileNotFoundError(input_directory)
 
-    assert os.path.exists(input_directory)
     targets_path = os.path.join(input_directory, targets_file_name)
     ppi_graph_path = os.path.join(input_directory, ppi_graph_file_name)
     dge_path = os.path.join(input_directory, dge_file_name)
@@ -77,4 +77,5 @@ def main(
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     main()

@@ -21,11 +21,11 @@ class Network:
     """Encapsulate a PPI network with differential gene expression and disease association annotation."""
 
     def __init__(
-            self,
-            ppi_graph: Graph,
-            max_adj_p: Optional[float] = None,
-            max_l2fc: Optional[float] = None,
-            min_l2fc: Optional[float] = None,
+        self,
+        ppi_graph: Graph,
+        max_adj_p: Optional[float] = None,
+        max_l2fc: Optional[float] = None,
+        min_l2fc: Optional[float] = None,
     ) -> None:
         """Initialize the network object.
 
@@ -42,10 +42,10 @@ class Network:
         self.graph = ppi_graph.copy()  # create deep copy of the graph
 
     def set_up_network(
-            self,
-            genes: List[Gene],
-            gene_filter: bool = False,
-            disease_associations: Optional[Dict] = None
+        self,
+        genes: List[Gene],
+        gene_filter: bool = False,
+        disease_associations: Optional[Dict] = None,
     ) -> None:
         """Set up the network.
 
@@ -70,9 +70,9 @@ class Network:
         self.graph.delete_vertices(irrelevant_genes)
 
     def _add_vertex_attributes(
-            self,
-            genes: List[Gene],
-            disease_associations: Optional[dict] = None,
+        self,
+        genes: List[Gene],
+        disease_associations: Optional[dict] = None,
     ) -> None:
         """Add attributes to vertices.
 

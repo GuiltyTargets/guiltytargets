@@ -2,12 +2,10 @@
 
 """Utilities for GuiltyTargets-Results."""
 
-import io
 import os
 from typing import Optional, TextIO
 
 import pandas as pd
-import requests
 from mygene import MyGeneInfo
 from opentargets import OpenTargetsClient
 
@@ -17,22 +15,22 @@ __all__ = [
 ]
 
 
-def download_hippie(*, url, path):
+def download_hippie(*, url: str, path):
+    """Download HIPPIE data."""
     if os.path.exists(path):
         return
-    s = requests.get(url).content
     cols = ['symbol1', 'entrez1', 'symbol2', 'entrez2', 'confidence', 'description']
-    df = pd.read_csv(io.StringIO(s.decode('utf-8')), sep='\t', header=None, names=cols)
+    df = pd.read_csv(url, sep='\t', header=None, names=cols)
     df[['entrez1', 'entrez2', 'confidence']].to_csv(path, sep='\t', header=False, index=False)
 
 
 def download_targets_for_disease(
-        disease_efo_id: str,
-        open_targets_client: Optional[OpenTargetsClient] = None,
-        my_gene_info: Optional[MyGeneInfo] = None,
-        file: Optional[TextIO] = None,
+    disease_efo_id: str,
+    open_targets_client: Optional[OpenTargetsClient] = None,
+    my_gene_info: Optional[MyGeneInfo] = None,
+    file: Optional[TextIO] = None,
 ) -> None:
-    """
+    """Download targets for a given disease.
 
     :param disease_efo_id: A disease's EFO identifier
     :param open_targets_client: An OpenTargetsClient

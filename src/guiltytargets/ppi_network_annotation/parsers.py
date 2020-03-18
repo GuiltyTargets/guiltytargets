@@ -43,12 +43,12 @@ def parse_ppi_graph(path: str, min_edge_weight: float = 0.0) -> Graph:
 
 
 def parse_excel(
-        file_path: str,
-        entrez_id_header,
-        log_fold_change_header,
-        adjusted_p_value_header,
-        entrez_delimiter,
-        base_mean_header=None,
+    file_path: str,
+    entrez_id_header,
+    log_fold_change_header,
+    adjusted_p_value_header,
+    entrez_delimiter,
+    base_mean_header=None,
 ) -> List[Gene]:
     """Read an excel file on differential expression values as Gene objects.
 
@@ -71,13 +71,13 @@ def parse_excel(
 
 
 def parse_csv(
-        file_path: str,
-        entrez_id_header,
-        log_fold_change_header,
-        adjusted_p_value_header,
-        entrez_delimiter,
-        base_mean_header=None,
-        sep=",",
+    file_path: str,
+    entrez_id_header,
+    log_fold_change_header,
+    adjusted_p_value_header,
+    entrez_delimiter,
+    base_mean_header=None,
+    sep=",",
 ) -> List[Gene]:
     """Read a csv file on differential expression values as Gene objects.
 
@@ -100,12 +100,12 @@ def parse_csv(
 
 
 def _handle_dataframe(
-        df: pd.DataFrame,
-        entrez_id_name,
-        log2_fold_change_name,
-        adjusted_p_value_name,
-        entrez_delimiter,
-        base_mean=None,
+    df: pd.DataFrame,
+    entrez_id_name,
+    log2_fold_change_name,
+    adjusted_p_value_name,
+    entrez_delimiter,
+    base_mean=None,
 ) -> List[Gene]:
     """Convert data frame on differential expression values as Gene objects.
 

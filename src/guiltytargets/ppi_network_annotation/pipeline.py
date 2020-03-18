@@ -18,14 +18,14 @@ logger = logging.getLogger(__name__)
 
 
 def generate_ppi_network(
-        ppi_graph_path: str,
-        dge_list: List[Gene],
-        max_adj_p: float,
-        max_log2_fold_change: float,
-        min_log2_fold_change: float,
-        ppi_edge_min_confidence: Optional[float] = None,
-        current_disease_ids_path: Optional[str] = None,
-        disease_associations_path: Optional[str] = None,
+    ppi_graph_path: str,
+    dge_list: List[Gene],
+    max_adj_p: float,
+    max_log2_fold_change: float,
+    min_log2_fold_change: float,
+    ppi_edge_min_confidence: Optional[float] = None,
+    current_disease_ids_path: Optional[str] = None,
+    disease_associations_path: Optional[str] = None,
 ) -> Network:
     """Generate the protein-protein interaction network.
 
@@ -55,12 +55,12 @@ def generate_ppi_network(
 
 
 def parse_dge(
-        dge_path: str,
-        entrez_id_header: str,
-        log2_fold_change_header: str,
-        adj_p_header: str,
-        entrez_delimiter: str,
-        base_mean_header: Optional[str] = None
+    dge_path: str,
+    entrez_id_header: str,
+    log2_fold_change_header: str,
+    adj_p_header: str,
+    entrez_delimiter: str,
+    base_mean_header: Optional[str] = None,
 ) -> List[Gene]:
     """Parse a differential expression file.
 
@@ -100,7 +100,7 @@ def parse_dge(
             adjusted_p_value_header=adj_p_header,
             entrez_delimiter=entrez_delimiter,
             base_mean_header=base_mean_header,
-            sep="\t"
+            sep="\t",
         )
 
     raise ValueError(f'Unsupported extension: {dge_path}')

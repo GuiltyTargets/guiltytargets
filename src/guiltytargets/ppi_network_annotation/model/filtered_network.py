@@ -59,9 +59,9 @@ class FilteredNetwork:
         return deg_graph
 
     def get_shortest_paths_graph(
-            self,
-            genes_to_keep: list = None,
-            keep_isolated_nodes: bool = False,
+        self,
+        genes_to_keep: list = None,
+        keep_isolated_nodes: bool = False,
     ):
         """Get the shortest paths graph between differentially expressed + special genes.
 

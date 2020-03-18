@@ -18,23 +18,23 @@ __all__ = [
 
 
 def run(
-        input_directory,
-        targets_path,
-        ppi_graph_path,
-        dge_path,
-        auc_output_path,
-        probs_output_path,
-        max_adj_p,
-        max_log2_fold_change,
-        min_log2_fold_change,
-        entrez_id_header,
-        log2_fold_change_header,
-        adj_p_header,
-        base_mean_header,
-        entrez_delimiter,
-        ppi_edge_min_confidence,
+    input_directory,
+    targets_path,
+    ppi_graph_path,
+    dge_path,
+    auc_output_path,
+    probs_output_path,
+    max_adj_p,
+    max_log2_fold_change,
+    min_log2_fold_change,
+    entrez_id_header,
+    log2_fold_change_header,
+    adj_p_header,
+    base_mean_header,
+    entrez_delimiter,
+    ppi_edge_min_confidence,
 ) -> None:
-    """Does it."""
+    """Run the GuiltyTargets pipeline."""
     gene_list = parse_dge(
         dge_path=dge_path,
         entrez_id_header=entrez_id_header,
@@ -73,7 +73,7 @@ def run(
     )
 
 
-def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: str):
+def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: str) -> None:
     """Write the input files for gat2vec tool.
 
     :param network: Network object with attributes overlayed on it.
@@ -90,9 +90,9 @@ def write_gat2vec_input_files(network: Network, targets: List[str], home_dir: st
 
 
 def rank_targets(
-        network: Network,
-        targets: List[str],
-        directory: str,
+    network: Network,
+    targets: List[str],
+    directory: str,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Rank proteins based on their likelihood of being targets.
 
@@ -120,9 +120,9 @@ def rank_targets(
 
 
 def get_rankings(
-        classifier: Classification,
-        embedding: pd.DataFrame,
-        network: Network,
+    classifier: Classification,
+    embedding: pd.DataFrame,
+    network: Network,
 ) -> pd.DataFrame:
     """Save the predicted rankings to a file.
 
