@@ -9,7 +9,6 @@ from typing import List, Set
 
 import igraph
 import pandas as pd
-from igraph import Graph
 
 from .model.gene import Gene
 
@@ -25,15 +24,20 @@ __all__ = [
 logger = logging.getLogger(__name__)
 
 
-def parse_ppi_graph(path: str, min_edge_weight: float = 0.0) -> Graph:
+def parse_ppi_graph(path: str, min_edge_weight: float = 0.0) -> igraph.Graph:
     """Build an undirected graph of gene interactions from edgelist file.
 
-    :param str path: The path to the edgelist file
-    :param float min_edge_weight: Cutoff to keep/remove the edges, default is 0, but could also be 0.63.
-    :return Graph: Protein-protein interaction graph
+    :param path: The path to the edgelist file. This file has two columns, and is tab separated.
+    :param min_edge_weight: Cutoff to keep/remove the edges, default is 0, but could also be 0.63.
+    :return: Protein-protein interaction graph
     """
     logger.info("In parse_ppi_graph()")
-    graph = igraph.read(os.path.expanduser(path), format="ncol", directed=False, names=True)
+    path = os.path.expanduser(path)
+    try:
+        graph = igraph.read(path, format="ncol", directed=False, names=True)
+    except Exception:
+        logger.warning(f'Could not read {path}')
+        raise
     graph.delete_edges(graph.es.select(weight_lt=min_edge_weight))
     graph.delete_vertices(graph.vs.select(_degree=0))
     logger.info(f"Loaded PPI network.\n"
@@ -142,7 +146,7 @@ def _handle_dataframe(
     ]
 
 
-def parse_gene_list(path: str, graph: Graph, anno_type: str = "name") -> List:
+def parse_gene_list(path: str, graph: igraph.Graph, anno_type: str = "name") -> List:
     """Parse a list of genes and return them if they are in the network.
 
     :param path: The path of input file.

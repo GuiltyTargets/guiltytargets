@@ -2,16 +2,25 @@ GuiltyTargets
 =============
 This is a tool for therapeutic target prioritization using network representation learning. 
 
-
 Installation
 ------------
 Download this repository, go to the directory it resides and run:
 
 .. code-block:: bash
 
-   $ git clone https://github.com/guiltytargets/guiltytargets.git
-   $ cd guiltytargets
-   $ pip install -e .
+    $ git clone https://github.com/phanein/deepwalk.git
+    $ cd deepwalk
+    $ pip install .
+    $ cd ..
+    $ # Install GAT2VEC, which depends on DeepWalk
+    $ git clone https://github.com/ozlemmuslu/GAT2VEC.git gat2vec
+    $ cd gat2vec
+    $ pip install .
+    $ cd ..
+    $ # Actually install GuiltyTargets
+    $ git clone https://github.com/guiltytargets/guiltytargets.git
+    $ cd guiltytargets
+    $ pip install -e .
 
 Usage
 -----
@@ -19,9 +28,9 @@ After that, you can use it as a library in Python
 
 .. code-block:: python
 
-   from guiltytargets.pipeline import run
-  
-   run(
+   import guiltytargets
+
+   guiltytargets.run(
        input_directory,
        targets_path,
        ppi_graph_path,
@@ -39,39 +48,42 @@ After that, you can use it as a library in Python
        ppi_edge_min_confidence=confidence_cutoff,
     )
 
-This will create files in paths ``auc_output_path`` and ``probs_output_path``, where the former shows the AUC values of cross validation and the latter shows the predicted targets.
+This will create files in paths ``auc_output_path`` and ``probs_output_path``, where
+the former shows the AUC values of cross validation and the latter shows the predicted
+targets.
 
 The parameters are explained below. A use case can be found under https://github.com/GuiltyTargets/reproduction
 
 INPUT FILES
 -----------
-There are 3 files which are necessary to run this program. All input files should be found under input_directory 
+There are 3 files which are necessary to run this program. All input files should be found
+under input_directory
 
 1. ``ppi_graph_path``: A path to a file containing a protein-protein interaction network in the format of:
 
-    **EntrezID** **EntrezID** **CONFIDENCE**
-    
-    
-    Such as:
-    
-    216 216 0.76
-    
-    3679 1134 0.73
-    
-    55607 71 0.65
-    
-    5552 960 0.63
-    
-    2886 2064 0.9
-    
-    5058 2064 0.73
-    
-    1742 2064 0.87
-    
+    +------------------+------------------+------------+
+    | source_entrez_id | target_entrez_id | confidence |
+    +==================+==================+============+
+    | 216              | 216              | 0.76       |
+    +------------------+------------------+------------+
+    | 3679             | 1134             | 0.73       |
+    +------------------+------------------+------------+
+    | 55607            | 71               | 0.65       |
+    +------------------+------------------+------------+
+    | 5552             | 960              | 0.63       |
+    +------------------+------------------+------------+
+    | 2886             | 2064             | 0.90       |
+    +------------------+------------------+------------+
+    | 5058             | 2064             | 0.73       |
+    +------------------+------------------+------------+
+    | 1742             | 2064             | 0.87       |
+    +------------------+------------------+------------+
+
     An example of such a network can be found [here](http://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/download.php)
 
 
-2. ``dge_path``: A path to a file containing an experiment, in tsv format. Rows show individual entries, columns are the values of the following properties:
+2. ``dge_path``: A path to a file containing an experiment, in tsv format. Rows show individual entries,
+   columns are the values of the following properties:
   - **Base mean**
   - **Log fold change**
   - **Adjusted p value**
@@ -81,25 +93,13 @@ There are 3 files which are necessary to run this program. All input files shoul
 
 3. ``targets_path``: A path to a file containing a list of Entrez ids of known targets, in the format of
 
-    EntrezID1
-    
-    EntrezID2
-    
-    ...
-    
-    
-    Such as:
-    
-    1742
-    
-    3996
-    
-    150
-    
-    152
-    
-    151
+    ... code-block:: sh
 
+        1742
+        3996
+        150
+        152
+        151
 
 OPTIONS
 -------

@@ -15,13 +15,14 @@ __all__ = [
 ]
 
 
-def download_hippie(*, url: str, path):
-    """Download HIPPIE data."""
+def download_hippie(*, url: str, path: str) -> str:
+    """Download HIPPIE data and return the path where it is."""
     if os.path.exists(path):
-        return
+        return path
     cols = ['symbol1', 'entrez1', 'symbol2', 'entrez2', 'confidence', 'description']
     df = pd.read_csv(url, sep='\t', header=None, names=cols)
     df[['entrez1', 'entrez2', 'confidence']].to_csv(path, sep='\t', header=False, index=False)
+    return path
 
 
 def download_targets_for_disease(
