@@ -1,6 +1,11 @@
 GuiltyTargets |build|
 =====================
 This is a tool for therapeutic target prioritization using network representation learning.
+If you find it useful in your work, please consider citing [muslu2019]_.
+
+.. [muslu2019] Muslu, Ö., Hoyt, C. T., Hofmann-Apitius, M., & Fröhlich, H. (2019). `GuiltyTargets: Prioritization of
+   Novel Therapeutic Targets with Deep Network Representation Learning <https://doi.org/10.1101/521161>`_.
+   *bioRxiv*, 521161.
 
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
