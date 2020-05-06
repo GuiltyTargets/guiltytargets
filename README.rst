@@ -1,9 +1,9 @@
-GuiltyTargets
-=============
+GuiltyTargets |build|
+=====================
 This is a tool for therapeutic target prioritization using network representation learning.
 
-Installation
-------------
+Installation |pypi_version| |python_versions| |pypi_license|
+------------------------------------------------------------
 Download this repository, go to the directory it resides and run:
 
 .. code-block:: bash
@@ -116,3 +116,19 @@ The options that should be set are:
 - adj_p_header: The column name for the adjusted p-value in the differential expression file.
 - base_mean_header: The column name for the base mean in the differential expression file.
 - entrez_delimiter: If there is more than one Entrez id per row in the diff. expr. file, the separator betweem them.
+
+.. |build| image:: https://travis-ci.com/GuiltyTargets/guilitytargets.svg?branch=develop
+    :target: https://travis-ci.com/GuiltyTargets/guilitytargets
+    :alt: Development Build Status
+
+.. |python_versions| image:: https://img.shields.io/pypi/pyversions/guiltytargets.svg
+    :target: https://pypi.python.org/pypi/guilitytargets
+    :alt: Stable Supported Python Versions
+
+.. |pypi_version| image:: https://img.shields.io/pypi/v/guiltytargets.svg
+    :target: https://pypi.python.org/pypi/guilitytargets
+    :alt: Current version on PyPI
+
+.. |pypi_license| image:: https://img.shields.io/pypi/l/guiltytargets.svg
+    :target: https://github.com/guilitytargets/guilitytargets/blob/master/LICENSE
+    :alt: MIT License
