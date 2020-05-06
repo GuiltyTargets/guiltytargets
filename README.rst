@@ -1,6 +1,6 @@
 GuiltyTargets
 =============
-This is a tool for therapeutic target prioritization using network representation learning. 
+This is a tool for therapeutic target prioritization using network representation learning.
 
 Installation
 ------------
@@ -84,12 +84,14 @@ under input_directory
 
 2. ``dge_path``: A path to a file containing an experiment, in tsv format. Rows show individual entries,
    columns are the values of the following properties:
-  - **Base mean**
-  - **Log fold change**
-  - **Adjusted p value**
-  - **Entrez id**
 
-  The file may contain other columns too, but the indices and names of the above columns must be entered to the configuration file.
+   - **Base mean**
+   - **Log fold change**
+   - **Adjusted p value**
+   - **Entrez id**
+
+  The file may contain other columns too, but the indices and names of the above columns must be
+  entered to the configuration file.
 
 3. ``targets_path``: A path to a file containing a list of Entrez ids of known targets, in the format of
 
