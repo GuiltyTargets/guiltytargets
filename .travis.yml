@@ -2,26 +2,24 @@ sudo: false
 cache: pip
 language: python
 python:
-- 3.6
+  - 3.7
 stages:
   - lint
   - docs
+  - tests
 jobs:
   include:
     # lint stage
     - stage: lint
       env: TOXENV=manifest
     - env: TOXENV=flake8
-    - env: TOXENV=pylint
     # docs stage
     - stage: docs
       env: TOXENV=doc8
     - env: TOXENV=readme
     - env: TOXENV=docs
-matrix:
-  allow_failures:
-      - env: TOXENV=flake8
-      - env: TOXENV=pylint
+    - stage: tests
+      env: TOXENV=py
 install:
   - pip install tox
 script:
