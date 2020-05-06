@@ -117,8 +117,8 @@ The options that should be set are:
 - base_mean_header: The column name for the base mean in the differential expression file.
 - entrez_delimiter: If there is more than one Entrez id per row in the diff. expr. file, the separator betweem them.
 
-.. |build| image:: https://travis-ci.com/GuiltyTargets/guilitytargets.svg?branch=develop
-    :target: https://travis-ci.com/GuiltyTargets/guilitytargets
+.. |build| image:: https://travis-ci.com/GuiltyTargets/guiltytargets.svg?branch=master
+    :target: https://travis-ci.com/GuiltyTargets/guiltytargets
     :alt: Development Build Status
 
 .. |python_versions| image:: https://img.shields.io/pypi/pyversions/guiltytargets.svg
