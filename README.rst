@@ -105,20 +105,12 @@ OPTIONS
 -------
 The options that should be set are:
 
-max_adj_p: Maximum value for adjusted p-value for a gene to be considered differentially expressed.
-
-max_log2_fold_change: Maximum value for log2 fold change for a gene to be considered differentially expressed
-
-min_log2_fold_change: Minimum value for log2 fold change for a gene to be considered differentially expressed
-
-ppi_edge_min_confidence: Minimum confidence score for the edges in PPI network.
-
-entrez_id_header: The column name for the Entrez id in the differential expression file.
-
-log2_fold_change_header: The column name for the log2 fold change in the differential expression file.
-
-adj_p_header: The column name for the adjusted p-value in the differential expression file.
-
-base_mean_header: The column name for the base mean in the differential expression file.
-
-entrez_delimiter: If there is more than one Entrez id per row in the diff. expr. file, the separator betweem them.
+- max_adj_p: Maximum value for adjusted p-value for a gene to be considered differentially expressed.
+- max_log2_fold_change: Maximum value for log2 fold change for a gene to be considered differentially expressed
+- min_log2_fold_change: Minimum value for log2 fold change for a gene to be considered differentially expressed
+- ppi_edge_min_confidence: Minimum confidence score for the edges in PPI network.
+- entrez_id_header: The column name for the Entrez id in the differential expression file.
+- log2_fold_change_header: The column name for the log2 fold change in the differential expression file.
+- adj_p_header: The column name for the adjusted p-value in the differential expression file.
+- base_mean_header: The column name for the base mean in the differential expression file.
+- entrez_delimiter: If there is more than one Entrez id per row in the diff. expr. file, the separator betweem them.
