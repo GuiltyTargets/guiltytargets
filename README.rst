@@ -1,9 +1,9 @@
 GuiltyTargets |build|
 =====================
 This is a tool for therapeutic target prioritization using network representation learning.
-If you find it useful in your work, please consider citing [muslu2019]_.
+If you find it useful in your work, please consider citing [muslu2020]_.
 
-.. [muslu2019] Muslu, Ö., Hoyt, C. T., De Lacerda, M. P., Hofmann-Apitius, M., & Fröhlich, H. (2020).
+.. [muslu2020] Muslu, Ö., Hoyt, C. T., De Lacerda, M. P., Hofmann-Apitius, M., & Fröhlich, H. (2020).
    `GuiltyTargets: Prioritization of Novel Therapeutic Targets with Deep Network Representation
    Learning <https://doi.org/10.1109/TCBB.2020.3003830>`_. *IEEE/ACM Transactions on Computational
    Biology and Bioinformatics*.
