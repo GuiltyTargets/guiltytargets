@@ -28,7 +28,7 @@ Download this repository, go to the directory it resides and run:
     $ cd guiltytargets
     $ pip install -e .
     
-NOTE: Please see [this issue](https://github.com/GuiltyTargets/guiltytargets/issues/6) if you cannot install opentargets. We currently do not have a solution for this
+NOTE: Please see the issue https://github.com/GuiltyTargets/guiltytargets/issues/6 if you cannot install opentargets. We currently do not have a solution for this
 
 Usage
 -----
@@ -87,7 +87,7 @@ under input_directory
     | 1742             | 2064             | 0.87       |
     +------------------+------------------+------------+
 
-    An example of such a network can be found [here](http://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/download.php)
+    An example of such a network can be found under http://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/download.php
 
 
 2. ``dge_path``: A path to a file containing an experiment, in tsv format. Rows show individual entries,
