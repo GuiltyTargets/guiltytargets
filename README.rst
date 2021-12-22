@@ -27,6 +27,8 @@ Download this repository, go to the directory it resides and run:
     $ git clone https://github.com/guiltytargets/guiltytargets.git
     $ cd guiltytargets
     $ pip install -e .
+    
+NOTE: Please see [this issue](https://github.com/GuiltyTargets/guiltytargets/issues/6) if you cannot install opentargets. We currently do not have a solution for this
 
 Usage
 -----
