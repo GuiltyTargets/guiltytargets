@@ -123,6 +123,15 @@ The options that should be set are:
 - base_mean_header: The column name for the base mean in the differential expression file.
 - entrez_delimiter: If there is more than one Entrez id per row in the diff. expr. file, the separator betweem them.
 
+OUTPUTS
+-------
+- *_gat2vec.emb: Embedding file
+- *_na.adjlist: Adjacency list of undirected bipartite graph
+- *_graph.adjlist: Adjacency list of the structural graph (PPI)
+- labels_maped.txt: Labels (drug target/not for the disease)
+- probs.tsv: Probabilities assigned by the classifier whether the Entrez gene is a possible target(class 1) or not (class 0)
+- auc.tsv: The results of the cross validation. The targets are ranked based on the class 1 probabilities
+
 .. |build| image:: https://travis-ci.com/GuiltyTargets/guiltytargets.svg?branch=master
     :target: https://travis-ci.com/GuiltyTargets/guiltytargets
     :alt: Development Build Status
